@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>The Little Bistro — Premium Menu</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Outfit:wght@200;300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#20201b;
+  --layer:#2c2c24;
+  --card:#323229;
+  --amber:#f5a623;
+  --amber2:#ffbe4d;
+  --amber3:#ffe099;
+  --cream:#fff8ee;
+  --muted:rgba(255,248,238,0.5);
+  --border:rgba(245,166,35,0.38);
+  --glass:rgba(245,166,35,0.1);
+  --glow:0 0 24px rgba(245,166,35,0.45);
+  --shadow-card:0 6px 28px rgba(0,0,0,0.5),inset 0 1px 0 rgba(245,166,35,0.15);
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--cream);font-family:'Outfit',sans-serif;min-height:100vh;overflow-x:hidden;}
+
+body::after{content:'';position:fixed;inset:0;z-index:1;pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");opacity:.3;}
+
+#bg3d{position:fixed;inset:0;z-index:0;pointer-events:none;}
+
+/* ONBOARDING */
+#onboard{
+  position:fixed;inset:0;z-index:800;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:1.5rem;overflow-y:auto;
+  background:radial-gradient(ellipse 150% 110% at 50% 20%,#3d2e08 0%,#20201b 60%);
+}
+.ob-logo{text-align:center;margin-bottom:2rem;animation:fadeUp .7s ease both;}
+.ob-wordmark{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(2.8rem,12vw,5.2rem);font-weight:300;font-style:italic;
+  background:linear-gradient(160deg,#f5a623 0%,#ffe099 50%,#f5a623 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  line-height:1;letter-spacing:0.02em;
+  filter:drop-shadow(0 0 55px rgba(245,166,35,.75));
+}
+.ob-rule{display:flex;align-items:center;gap:.8rem;margin:.5rem 0 .3rem;justify-content:center;}
+.ob-rule-line{width:45px;height:1px;background:rgba(245,166,35,.45);}
+.ob-rule-dot{font-size:.62rem;letter-spacing:.32em;text-transform:uppercase;color:rgba(245,166,35,.75);}
+.ob-sub{font-size:.65rem;letter-spacing:.32em;text-transform:uppercase;color:rgba(245,166,35,.55);}
+
+.ob-card{
+  background:rgba(50,50,38,0.65);border:1.5px solid rgba(245,166,35,.45);border-radius:26px;
+  padding:2.2rem 1.8rem;width:100%;max-width:400px;
+  backdrop-filter:blur(28px);
+  box-shadow:0 32px 80px rgba(0,0,0,.7),0 0 50px rgba(245,166,35,.08),inset 0 1px 0 rgba(245,166,35,.2);
+  animation:fadeUp .7s .1s ease both;
+}
+.ob-card-title{font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:400;color:#ffe099;text-align:center;margin-bottom:.3rem;}
+.ob-card-sub{font-size:.72rem;color:var(--muted);text-align:center;letter-spacing:.05em;margin-bottom:1.8rem;}
+
+.field-label{font-size:.65rem;letter-spacing:.18em;text-transform:uppercase;color:var(--amber);margin-bottom:.5rem;display:block;font-weight:500;}
+.field-wrap{position:relative;margin-bottom:1.4rem;}
+.field-wrap input{
+  width:100%;padding:.85rem 1rem .85rem 2.8rem;
+  background:rgba(245,166,35,.09);border:1.5px solid rgba(245,166,35,.32);border-radius:13px;
+  font-family:'Outfit',sans-serif;font-size:.9rem;font-weight:300;
+  color:var(--cream);letter-spacing:.04em;outline:none;transition:all .25s;caret-color:var(--amber);
+}
+.field-wrap input::placeholder{color:rgba(255,248,238,.22);}
+.field-wrap input:focus{border-color:var(--amber);background:rgba(245,166,35,.13);box-shadow:0 0 0 4px rgba(245,166,35,.18),var(--glow);}
+.field-icon{position:absolute;left:.9rem;top:50%;transform:translateY(-50%);font-size:1rem;pointer-events:none;color:var(--amber);}
+
+.tbl-label{font-size:.65rem;letter-spacing:.18em;text-transform:uppercase;color:var(--amber);margin-bottom:.6rem;display:block;font-weight:500;}
+.tbl-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:1.6rem;}
+.t-btn{
+  aspect-ratio:1;background:rgba(245,166,35,.09);border:1.5px solid rgba(245,166,35,.22);
+  border-radius:11px;color:rgba(255,248,238,.6);
+  font-family:'Cormorant Garamond',serif;font-size:1rem;font-weight:500;
+  cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;
+}
+.t-btn:hover{background:rgba(245,166,35,.2);color:var(--cream);border-color:var(--amber);}
+.t-btn.sel{
+  background:var(--amber);border-color:var(--amber2);color:#20201b;font-weight:700;
+  box-shadow:0 4px 22px rgba(245,166,35,.65),0 0 0 3px rgba(245,166,35,.22);transform:scale(1.1);
+}
+
+.enter-btn{
+  width:100%;padding:1rem;background:var(--amber);border:none;border-radius:14px;
+  font-family:'Outfit',sans-serif;font-size:.82rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;
+  color:#20201b;cursor:pointer;transition:all .3s;opacity:.3;pointer-events:none;
+}
+.enter-btn.on{opacity:1;pointer-events:all;box-shadow:0 8px 34px rgba(245,166,35,.6);}
+.enter-btn.on:hover{transform:translateY(-2px);background:var(--amber2);box-shadow:0 14px 42px rgba(245,166,35,.7);}
+
+/* APP */
+#app{display:none;position:relative;z-index:10;}
+
+.hdr{
+  position:sticky;top:0;z-index:300;padding:.8rem 1.2rem;
+  display:flex;align-items:center;justify-content:space-between;
+  background:rgba(32,32,27,.93);backdrop-filter:blur(22px);
+  border-bottom:1.5px solid rgba(245,166,35,.35);
+  box-shadow:0 4px 28px rgba(0,0,0,.45),0 1px 0 rgba(245,166,35,.15);
+}
+.hdr-logo{
+  font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:400;font-style:italic;
+  background:linear-gradient(135deg,var(--amber),var(--amber3));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  filter:drop-shadow(0 0 12px rgba(245,166,35,.45));
+}
+.hdr-logo small{
+  display:block;font-style:normal;font-family:'Outfit',sans-serif;font-size:.52rem;
+  letter-spacing:.25em;text-transform:uppercase;-webkit-text-fill-color:rgba(245,166,35,.65);margin-top:1px;
+}
+.hdr-right{display:flex;align-items:center;gap:.55rem;}
+.info-chip{
+  background:rgba(245,166,35,.13);border:1.5px solid rgba(245,166,35,.42);
+  border-radius:8px;padding:.28rem .65rem;font-size:.66rem;letter-spacing:.06em;
+  color:var(--amber2);white-space:nowrap;font-weight:500;
+}
+.cart-btn{
+  position:relative;background:var(--amber);border:none;border-radius:11px;
+  padding:.5rem .92rem;color:#20201b;font-family:'Outfit',sans-serif;
+  font-size:.77rem;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:.35rem;
+  transition:all .2s;box-shadow:0 4px 18px rgba(245,166,35,.55);
+}
+.cart-btn svg{width:14px;height:14px;}
+.cart-btn:hover{transform:translateY(-1px);background:var(--amber2);box-shadow:0 8px 26px rgba(245,166,35,.65);}
+.cdot{
+  position:absolute;top:-5px;right:-5px;
+  background:#ff4e3a;color:#fff;border-radius:50%;width:17px;height:17px;
+  font-size:.6rem;font-weight:700;display:none;align-items:center;justify-content:center;
+  box-shadow:0 2px 10px rgba(255,78,58,.7);
+}
+.cdot.on{display:flex;}
+
+.cat-nav{
+  display:flex;overflow-x:auto;gap:.45rem;padding:.8rem 1rem;
+  background:rgba(32,32,27,.85);border-bottom:1px solid rgba(245,166,35,.18);
+  scrollbar-width:none;backdrop-filter:blur(12px);
+}
+.cat-nav::-webkit-scrollbar{display:none;}
+.cpill{
+  flex-shrink:0;padding:.42rem .95rem;border-radius:30px;
+  border:1.5px solid rgba(245,166,35,.22);background:transparent;
+  font-family:'Outfit',sans-serif;font-size:.75rem;font-weight:400;
+  color:rgba(255,248,238,.5);cursor:pointer;transition:all .22s;
+  white-space:nowrap;display:flex;align-items:center;gap:.3rem;
+}
+.cpill:hover{border-color:var(--amber);color:var(--amber);background:rgba(245,166,35,.1);}
+.cpill.on{background:var(--amber);border-color:var(--amber);color:#20201b;font-weight:600;box-shadow:0 3px 16px rgba(245,166,35,.5);}
+
+/* HERO */
+.hero{position:relative;overflow:hidden;height:260px;display:flex;align-items:center;justify-content:center;}
+#hero-canvas{position:absolute;inset:0;pointer-events:none;}
+.hero-bg{position:absolute;inset:0;background:url('https://images.unsplash.com/photo-1445116572660-236099ec97a0?w=900&q=80') center/cover;filter:brightness(0.22) saturate(0.6);}
+.hero-gradient{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(32,32,27,.2) 0%,rgba(32,32,27,0) 35%,rgba(32,32,27,.8) 80%,rgba(32,32,27,1) 100%);}
+.hero-content{position:relative;z-index:2;text-align:center;padding:1rem;}
+.hero-greet{font-size:.65rem;letter-spacing:.32em;text-transform:uppercase;color:var(--amber);margin-bottom:.5rem;font-weight:500;text-shadow:0 0 22px rgba(245,166,35,.9);}
+.hero-name{font-family:'Cormorant Garamond',serif;font-size:clamp(1.8rem,7vw,2.8rem);font-weight:300;font-style:italic;color:var(--cream);line-height:1.1;margin-bottom:.4rem;text-shadow:0 2px 24px rgba(0,0,0,.65);}
+.hero-tagline{font-size:.76rem;color:var(--muted);letter-spacing:.08em;font-weight:300;}
+.gold-bar{width:60px;height:2px;background:linear-gradient(90deg,transparent,var(--amber),transparent);margin:.9rem auto 0;border-radius:1px;box-shadow:0 0 14px rgba(245,166,35,.7);}
+
+/* MENU */
+.menu-body{padding:1.2rem .9rem 9rem;}
+.m-section{margin-bottom:2.8rem;}
+.sec-hdr{display:flex;align-items:center;gap:.9rem;margin-bottom:1.1rem;padding:0 .2rem;}
+.sec-icon{
+  width:38px;height:38px;background:rgba(245,166,35,.16);border:1.5px solid rgba(245,166,35,.4);
+  border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;
+  box-shadow:0 0 16px rgba(245,166,35,.25);
+}
+.sec-name{font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:400;font-style:italic;color:var(--amber2);text-shadow:0 0 22px rgba(245,166,35,.35);}
+.sec-line{flex:1;height:1.5px;background:linear-gradient(to right,rgba(245,166,35,.55),transparent);}
+
+/* CARDS */
+.items-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:.85rem;}
+.items-grid .m-card:first-child{grid-column:1/-1;flex-direction:row;}
+.items-grid .m-card:first-child .card-img-wrap{width:120px;padding-top:0;height:120px;flex-shrink:0;border-radius:14px 0 0 14px;}
+.items-grid .m-card:first-child .card-img{position:relative;border-radius:14px 0 0 14px;}
+.items-grid .m-card:first-child .card-body{padding:.9rem 1rem;display:flex;flex-direction:column;justify-content:space-between;flex:1;}
+
+.m-card{
+  background:var(--card);border:1.5px solid rgba(245,166,35,.2);border-radius:18px;
+  overflow:hidden;display:flex;flex-direction:column;
+  transition:all .3s cubic-bezier(.34,1.56,.64,1);
+  box-shadow:var(--shadow-card);position:relative;cursor:default;
+}
+.m-card::before{content:'';position:absolute;inset:0;border-radius:18px;pointer-events:none;z-index:1;background:linear-gradient(135deg,rgba(245,166,35,.07) 0%,transparent 50%);}
+.m-card:hover{
+  transform:translateY(-5px) scale(1.018);
+  border-color:rgba(245,166,35,.6);
+  box-shadow:0 22px 55px rgba(0,0,0,.55),0 0 0 1px rgba(245,166,35,.4),0 0 35px rgba(245,166,35,.18),inset 0 1px 0 rgba(245,166,35,.22);
+}
+
+.card-img-wrap{position:relative;overflow:hidden;width:100%;padding-top:62%;}
+.card-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .5s ease;background:var(--layer);}
+.m-card:hover .card-img{transform:scale(1.08);}
+.img-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(32,32,27,.92) 0%,rgba(32,32,27,.05) 55%,transparent 100%);}
+.img-badge{
+  position:absolute;top:.6rem;right:.6rem;background:var(--amber);
+  color:#20201b;border-radius:8px;padding:.24rem .62rem;font-size:.67rem;font-weight:700;
+  letter-spacing:.04em;z-index:2;box-shadow:0 3px 14px rgba(245,166,35,.55);
+}
+.card-img-wrap::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent 0%,rgba(245,166,35,.09) 50%,transparent 100%);background-size:200% 100%;animation:shimmer 1.8s infinite;}
+@keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
+
+.card-body{padding:.8rem .85rem .85rem;flex:1;display:flex;flex-direction:column;gap:.35rem;}
+.card-name{font-family:'Cormorant Garamond',serif;font-size:.98rem;font-weight:600;color:var(--cream);line-height:1.2;}
+.card-desc{font-size:.68rem;color:rgba(255,248,238,.42);line-height:1.45;flex:1;}
+.card-foot{display:flex;align-items:center;justify-content:space-between;margin-top:.3rem;}
+.card-price{font-size:.9rem;font-weight:700;color:var(--amber2);text-shadow:0 0 14px rgba(245,166,35,.45);}
+.add-btn{
+  width:34px;height:34px;background:var(--amber);border:none;border-radius:10px;
+  color:#20201b;font-size:1.35rem;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  transition:all .25s cubic-bezier(.34,1.56,.64,1);
+  box-shadow:0 3px 14px rgba(245,166,35,.55),inset 0 1px 0 rgba(255,255,255,.15);line-height:1;font-weight:300;
+}
+.add-btn:hover{transform:scale(1.22);background:var(--amber2);box-shadow:0 6px 24px rgba(245,166,35,.7);}
+
+.qty-row{display:flex;align-items:center;gap:.4rem;}
+.qb{
+  width:30px;height:30px;background:rgba(245,166,35,.13);border:1.5px solid rgba(245,166,35,.38);
+  border-radius:8px;color:var(--amber2);font-size:.95rem;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;transition:all .15s;
+}
+.qb:hover{background:rgba(245,166,35,.28);color:var(--cream);}
+.qn{font-size:.88rem;font-weight:700;color:var(--amber);min-width:14px;text-align:center;}
+
+/* FLOAT BAR */
+.float-bar{
+  position:fixed;bottom:1.1rem;left:.9rem;right:.9rem;z-index:400;
+  background:rgba(32,32,27,.97);border:1.5px solid rgba(245,166,35,.5);
+  border-radius:20px;padding:.9rem 1.2rem;
+  display:none;align-items:center;justify-content:space-between;
+  backdrop-filter:blur(22px);
+  box-shadow:0 16px 52px rgba(0,0,0,.65),0 0 36px rgba(245,166,35,.25),inset 0 1px 0 rgba(245,166,35,.18);
+  cursor:pointer;transition:transform .2s;
+}
+.float-bar.on{display:flex;}
+.float-bar:hover{transform:translateY(-3px);}
+.fb-l{display:flex;align-items:center;gap:.6rem;}
+.fb-badge{background:var(--amber);color:#20201b;border-radius:7px;padding:.2rem .6rem;font-size:.75rem;font-weight:700;box-shadow:0 2px 12px rgba(245,166,35,.55);}
+.fb-txt{font-size:.78rem;color:var(--muted);font-weight:300;}
+.fb-price{font-size:.96rem;font-weight:700;color:var(--amber2);}
+
+/* CART */
+#cOverlay{position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.82);backdrop-filter:blur(12px);display:none;}
+#cOverlay.on{display:block;}
+.cart-sheet{
+  position:fixed;bottom:0;left:0;right:0;z-index:501;
+  background:linear-gradient(180deg,#2e2e24 0%,#24241c 100%);
+  border-radius:26px 26px 0 0;
+  border-top:2px solid rgba(245,166,35,.55);
+  border-left:1px solid rgba(245,166,35,.18);border-right:1px solid rgba(245,166,35,.18);
+  padding:1.4rem 1.1rem 2.5rem;max-height:90vh;overflow-y:auto;
+  transform:translateY(100%);transition:transform .4s cubic-bezier(.32,.72,0,1);
+  box-shadow:0 -30px 72px rgba(0,0,0,.8),0 -2px 0 rgba(245,166,35,.35);
+}
+.cart-sheet.on{transform:translateY(0);}
+.cart-sheet::-webkit-scrollbar{width:2px;}
+.cart-sheet::-webkit-scrollbar-thumb{background:rgba(245,166,35,.45);border-radius:1px;}
+
+.cs-handle{width:36px;height:4px;background:rgba(245,166,35,.55);border-radius:2px;margin:0 auto 1.4rem;box-shadow:0 0 12px rgba(245,166,35,.45);}
+.cs-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.3rem;}
+.cs-title{font-family:'Cormorant Garamond',serif;font-size:1.45rem;font-weight:400;font-style:italic;color:var(--amber3);text-shadow:0 0 22px rgba(245,166,35,.35);}
+.cs-close{
+  width:30px;height:30px;background:rgba(245,166,35,.12);border:1.5px solid rgba(245,166,35,.35);
+  border-radius:7px;color:var(--amber);cursor:pointer;
+  display:flex;align-items:center;justify-content:center;font-size:.95rem;transition:all .2s;
+}
+.cs-close:hover{background:rgba(245,166,35,.22);color:var(--cream);}
+
+.cs-empty{text-align:center;padding:2.5rem 1rem;color:var(--muted);}
+.cs-empty .ei{font-size:2.8rem;margin-bottom:.7rem;}
+.cs-empty p{font-size:.8rem;letter-spacing:.04em;}
+
+.cs-list{display:flex;flex-direction:column;gap:.7rem;margin-bottom:1.1rem;}
+.cs-item{background:rgba(245,166,35,.08);border:1px solid rgba(245,166,35,.22);border-radius:15px;padding:.8rem;display:flex;align-items:center;gap:.75rem;}
+.cs-img{width:48px;height:48px;border-radius:10px;object-fit:cover;flex-shrink:0;background:var(--layer);border:1px solid rgba(245,166,35,.25);}
+.cs-inf{flex:1;}
+.cs-n{font-size:.87rem;color:var(--cream);margin-bottom:.12rem;font-weight:400;}
+.cs-p{font-size:.72rem;color:var(--amber);font-weight:500;}
+.cs-ctl{display:flex;align-items:center;gap:.35rem;}
+.csb{width:26px;height:26px;background:rgba(245,166,35,.12);border:1.5px solid rgba(245,166,35,.32);border-radius:6px;color:var(--amber2);font-size:.88rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;}
+.csb:hover{background:rgba(245,166,35,.28);color:var(--cream);}
+.csq{font-size:.85rem;font-weight:700;color:var(--amber);min-width:13px;text-align:center;}
+
+.cs-rule{height:1px;background:rgba(245,166,35,.2);margin:.9rem 0;}
+.cs-sum{margin-bottom:1.1rem;}
+.sum-row{display:flex;justify-content:space-between;font-size:.79rem;color:var(--muted);margin-bottom:.35rem;}
+.sum-row.tot{font-size:1rem;font-weight:700;color:var(--amber2);padding-top:.3rem;}
+
+.tbl-strip{
+  background:rgba(245,166,35,.12);border:1.5px solid rgba(245,166,35,.38);
+  border-radius:11px;padding:.65rem .9rem;font-size:.78rem;color:var(--amber2);
+  text-align:center;letter-spacing:.05em;margin-bottom:1rem;font-weight:600;
+  box-shadow:0 0 18px rgba(245,166,35,.12);
+}
+
+.wa-btn{
+  width:100%;padding:1.05rem;
+  background:linear-gradient(135deg,#22c55e,#15803d);
+  border:none;border-radius:15px;
+  font-family:'Outfit',sans-serif;font-size:.88rem;font-weight:700;
+  letter-spacing:.08em;color:#fff;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;gap:.55rem;
+  transition:all .22s;
+  box-shadow:0 8px 30px rgba(34,197,94,.45),inset 0 1px 0 rgba(255,255,255,.14);
+}
+.wa-btn svg{width:20px;height:20px;}
+.wa-btn:hover{transform:translateY(-2px);box-shadow:0 14px 40px rgba(34,197,94,.55);}
+
+/* ANIMATIONS */
+@keyframes fadeUp{from{opacity:0;transform:translateY(22px);}to{opacity:1;transform:translateY(0);}}
+.m-section{animation:fadeUp .5s ease both;}
+.m-section:nth-child(1){animation-delay:.04s}.m-section:nth-child(2){animation-delay:.09s}
+.m-section:nth-child(3){animation-delay:.14s}.m-section:nth-child(4){animation-delay:.19s}
+.m-section:nth-child(5){animation-delay:.24s}.m-section:nth-child(6){animation-delay:.29s}
+.m-section:nth-child(7){animation-delay:.34s}
+
+@keyframes tiltPop{0%{transform:scale(1);}40%{transform:scale(1.3) rotate(-6deg);}70%{transform:scale(.92) rotate(4deg);}100%{transform:scale(1);}}
+.tilt-pop{animation:tiltPop .32s cubic-bezier(.34,1.56,.64,1);}
+</style>
+</head>
+<body>
+<canvas id="bg3d"></canvas>
+
+<!-- ══════ ONBOARDING ══════ -->
+<div id="onboard">
+  <div class="ob-logo">
+    <div class="ob-wordmark">The Little Bistro</div>
+    <div class="ob-rule">
+      <div class="ob-rule-line"></div>
+      <div class="ob-rule-dot">✦ Fine Café · Est. 2018 ✦</div>
+      <div class="ob-rule-line"></div>
+    </div>
+    <div class="ob-sub">Kolkata's most loved café experience</div>
+  </div>
+
+  <div class="ob-card">
+    <div class="ob-card-title">Welcome, Guest</div>
+    <div class="ob-card-sub">Tell us who you are and where you're seated</div>
+
+    <label class="field-label">Your Name</label>
+    <div class="field-wrap">
+      <span class="field-icon">✦</span>
+      <input type="text" id="nameInput" placeholder="e.g. Arjun Das" autocomplete="off" maxlength="40">
+    </div>
+
+    <label class="tbl-label">Your Table Number</label>
+    <div class="tbl-grid" id="tGrid"></div>
+
+    <button class="enter-btn" id="enterBtn">Enter the Bistro →</button>
+  </div>
+</div>
+
+<!-- ══════ APP ══════ -->
+<div id="app">
+  <header class="hdr">
+    <div class="hdr-logo">The Little Bistro<small>Digital Menu</small></div>
+    <div class="hdr-right">
+      <div class="info-chip" id="guestChip">Guest</div>
+      <div class="info-chip" id="tableChip">Table —</div>
+      <button class="cart-btn" onclick="openCart()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+          <path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/>
+        </svg>
+        Cart <span class="cdot" id="cdot">0</span>
+      </button>
+    </div>
+  </header>
+
+  <nav class="cat-nav" id="catNav"></nav>
+
+  <div class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-gradient"></div>
+    <canvas id="hero-canvas"></canvas>
+    <div class="hero-content">
+      <div class="hero-greet">✦ Welcome back ✦</div>
+      <div class="hero-name" id="heroName">Dear Guest</div>
+      <div class="hero-tagline">What are you craving today?</div>
+      <div class="gold-bar"></div>
+    </div>
+  </div>
+
+  <main class="menu-body" id="menuBody"></main>
+
+  <div class="float-bar" id="floatBar" onclick="openCart()">
+    <div class="fb-l">
+      <span class="fb-badge" id="fbBadge">0</span>
+      <span class="fb-txt">items in cart</span>
+    </div>
+    <span class="fb-price" id="fbPrice">₹0</span>
+  </div>
+</div>
+
+<!-- ══════ CART ══════ -->
+<div id="cOverlay" onclick="closeCart()"></div>
+<div class="cart-sheet" id="cartSheet">
+  <div class="cs-handle"></div>
+  <div class="cs-top">
+    <div class="cs-title">Your Order</div>
+    <button class="cs-close" onclick="closeCart()">✕</button>
+  </div>
+  <div id="cartBody"></div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+// ══ THREE.JS BG ══
+(()=>{
+  const c=document.getElementById('bg3d');
+  const R=new THREE.WebGLRenderer({canvas:c,alpha:true,antialias:true});
+  R.setPixelRatio(Math.min(devicePixelRatio,2));
+  R.setSize(innerWidth,innerHeight);
+  const scene=new THREE.Scene();
+  const cam=new THREE.PerspectiveCamera(60,innerWidth/innerHeight,.1,100);
+  cam.position.z=5;
+
+  // particles
+  const N=150;
+  const pos=new Float32Array(N*3);
+  for(let i=0;i<N;i++){pos[i*3]=(Math.random()-.5)*20;pos[i*3+1]=(Math.random()-.5)*20;pos[i*3+2]=(Math.random()-.5)*10-2;}
+  const pg=new THREE.BufferGeometry();
+  pg.setAttribute('position',new THREE.BufferAttribute(pos,3));
+  scene.add(new THREE.Points(pg,new THREE.PointsMaterial({color:0xf5a623,size:.055,transparent:true,opacity:.5,sizeAttenuation:true})));
+
+  // rings
+  [2,3,4,5].forEach((r,i)=>{
+    const m=new THREE.Mesh(
+      new THREE.TorusGeometry(r,.008,8,80),
+      new THREE.MeshBasicMaterial({color:0xf5a623,transparent:true,opacity:.025+i*.01})
+    );
+    m.rotation.set(Math.random()*Math.PI,Math.random()*Math.PI,0);
+    m.position.set((Math.random()-.5)*3,(Math.random()-.5)*3,-4-i);
+    m._s=.0006*(i+1);scene.add(m);
+  });
+
+  // octahedron
+  const oct=new THREE.Mesh(
+    new THREE.OctahedronGeometry(1.4,0),
+    new THREE.MeshBasicMaterial({color:0xf5a623,transparent:true,opacity:.025,wireframe:true})
+  );
+  oct.position.set(-2.5,1,-4);scene.add(oct);
+
+  let mx=0,my=0;
+  window.addEventListener('mousemove',e=>{mx=(e.clientX/innerWidth-.5)*2;my=-(e.clientY/innerHeight-.5)*2;});
+  let t=0;
+  const rings=scene.children.filter(o=>o.isMesh&&o.geometry.type==='TorusGeometry');
+  const animate=()=>{
+    requestAnimationFrame(animate);t+=.004;
+    scene.children[0].rotation.y=t*.03;scene.children[0].rotation.x=t*.015;
+    rings.forEach(r=>{r.rotation.z+=r._s;r.rotation.x+=r._s*.5;});
+    oct.rotation.y+=.003;oct.rotation.x+=.0015;
+    cam.position.x+=(mx*.25-cam.position.x)*.04;
+    cam.position.y+=(my*.18-cam.position.y)*.04;
+    R.render(scene,cam);
+  };
+  animate();
+  window.addEventListener('resize',()=>{cam.aspect=innerWidth/innerHeight;cam.updateProjectionMatrix();R.setSize(innerWidth,innerHeight);});
+})();
+
+// ══ HERO CANVAS ══
+(()=>{
+  const c=document.getElementById('hero-canvas');
+  if(!c)return;
+  const ctx=c.getContext('2d');
+  let w,h;
+  const resize=()=>{w=c.offsetWidth;h=c.offsetHeight;c.width=w;c.height=h;};
+  resize();
+  const beans=Array.from({length:14},()=>({x:Math.random()*500,y:Math.random()*280,r:Math.random()*16+7,sp:Math.random()*.28+.08,dr:(Math.random()-.5)*.3,op:Math.random()*.1+.03,rot:Math.random()*Math.PI*2,rs:(Math.random()-.5)*.012}));
+  const draw=(b)=>{
+    ctx.save();ctx.translate(b.x,b.y);ctx.rotate(b.rot);ctx.globalAlpha=b.op;
+    ctx.beginPath();ctx.ellipse(0,0,b.r,b.r*.58,0,0,Math.PI*2);ctx.fillStyle='#f5a623';ctx.fill();
+    ctx.beginPath();ctx.moveTo(0,-b.r*.52);ctx.quadraticCurveTo(b.r*.14,0,0,b.r*.52);
+    ctx.strokeStyle='rgba(32,32,27,.8)';ctx.lineWidth=1.1;ctx.stroke();
+    ctx.restore();
+  };
+  const loop=()=>{
+    ctx.clearRect(0,0,w,h);
+    beans.forEach(b=>{b.y-=b.sp;b.x+=b.dr;b.rot+=b.rs;if(b.y<-25)b.y=h+25;if(b.x<-25)b.x=w+25;if(b.x>w+25)b.x=-25;draw(b);});
+    requestAnimationFrame(loop);
+  };
+  loop();window.addEventListener('resize',resize);
+})();
+
+// ══ MENU DATA — The Little Bistro Real Menu ══
+const MENU=[
+  {id:'coffee',label:'Coffee',icon:'☕',items:[
+    {id:'c1',name:'Espresso',desc:'A single shot of coffee',price:109,img:'https://images.unsplash.com/photo-1610889556528-9a770e32642f?w=400&q=85'},
+    {id:'c2',name:'Doppio',desc:'A double shot of coffee',price:129,img:'https://images.unsplash.com/photo-1534778101976-62847782c213?w=400&q=85'},
+    {id:'c3',name:'Americano',desc:'A single shot of coffee with hot water',price:129,img:'https://images.unsplash.com/photo-1521302080334-4bebac2763a6?w=400&q=85'},
+    {id:'c4',name:'Affogato',desc:'Double shot of espresso over two scoops of vanilla ice cream',price:139,img:'https://images.unsplash.com/photo-1562967916-eb82221dfb92?w=400&q=85'},
+    {id:'c5',name:'Irish Coffee',desc:'Black coffee with Irish syrup stirred and topped with cream',price:169,img:'https://images.unsplash.com/photo-1497515114629-f71d768fd07c?w=400&q=85'},
+    {id:'c6',name:'Macchiato',desc:'Single shot of coffee with a bit of foamy milk',price:129,img:'https://images.unsplash.com/photo-1485808191679-5f86510bd9d4?w=400&q=85'},
+    {id:'c7',name:'Cappuccino',desc:'Espresso layered with steamed whole milk and thick rich foam',price:149,img:'https://images.unsplash.com/photo-1572442388796-11668a67e53d?w=400&q=85'},
+    {id:'c8',name:'Café Latte',desc:'A shot of coffee with steamed milk over it',price:159,img:'https://images.unsplash.com/photo-1561882468-9110e03e0f78?w=400&q=85'},
+    {id:'c9',name:'Mocha Latte',desc:'Espresso with chocolate and steamed milk',price:179,img:'https://images.unsplash.com/photo-1579888944880-d98341245702?w=400&q=85'},
+    {id:'c10',name:'Hazelnut Latte',desc:'Espresso with hazelnut syrup and steamed milk',price:179,img:'https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=400&q=85'},
+    {id:'c11',name:'Irish Latte',desc:'Espresso with Irish syrup and steamed milk',price:179,img:'https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=400&q=85'},
+    {id:'c12',name:'Caramel Latte',desc:'Espresso with caramel syrup and steamed milk',price:179,img:'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&q=85'},
+    {id:'c13',name:'Vanilla Latte',desc:'Espresso with vanilla syrup and steamed milk',price:179,img:'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=400&q=85'},
+    {id:'c14',name:'Flat White',desc:'Micro foamed milk poured over shot of espresso',price:159,img:'https://images.unsplash.com/photo-1577968897966-3d4325b36b61?w=400&q=85'},
+  ]},
+  {id:'tea',label:'Tea & More',icon:'🫖',items:[
+    {id:'t1',name:'Green Tea',desc:'Rich in anti-oxidants',price:79,img:'https://images.unsplash.com/photo-1567922045116-2a00fae2ed03?w=400&q=85'},
+    {id:'t2',name:'Jasmine Tea',desc:'Calms nerves',price:79,img:'https://images.unsplash.com/photo-1597318181409-cf64d0b5d8a2?w=400&q=85'},
+    {id:'t3',name:'Chamomile Tea',desc:'Enhances sleep',price:79,img:'https://images.unsplash.com/photo-1594631252845-29fc4cc8cde9?w=400&q=85'},
+    {id:'t4',name:'Mint Tea',desc:'Aids digestion',price:79,img:'https://images.unsplash.com/photo-1544787219-7f47ccb76574?w=400&q=85'},
+    {id:'t5',name:'Ashwagandha Tea',desc:'Reduces stress',price:89,img:'https://images.unsplash.com/photo-1615485500704-8e3b5b2d9e7e?w=400&q=85'},
+    {id:'t6',name:'Rose Tea',desc:'Enhances skin health',price:89,img:'https://images.unsplash.com/photo-1576092768241-dec231879fc3?w=400&q=85'},
+    {id:'t7',name:'Kahwa',desc:'Flushes out toxins',price:89,img:'https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=400&q=85'},
+    {id:'t8',name:'Turmeric Ginger Tulsi',desc:'Boosts immunity',price:89,img:'https://images.unsplash.com/photo-1615485500704-8e3b5b2d9e7e?w=400&q=85'},
+    {id:'t9',name:'Honey Lemon Mint Tea',desc:'Relieves stress',price:99,img:'https://images.unsplash.com/photo-1589881133825-b9b7e6e8b5c4?w=400&q=85'},
+    {id:'t10',name:'Masala Cutting Chai',desc:'Milk tea with ginger & Indian spices',price:99,img:'https://images.unsplash.com/photo-1567922045116-2a00fae2ed03?w=400&q=85'},
+    {id:'t11',name:'Hot Chocolate',desc:'Classic cocoa powder and milk, garnished with marshmallows',price:189,img:'https://images.unsplash.com/photo-1542990253-0d0f5be5f0ed?w=400&q=85'},
+    {id:'t12',name:'Nutella Hot Chocolate',desc:'Hot chocolate with Nutella, garnished with marshmallows',price:229,img:'https://images.unsplash.com/photo-1571934811356-5cc061b6821f?w=400&q=85'},
+  ]},
+  {id:'frappe',label:'Frappe',icon:'🧋',items:[
+    {id:'fr1',name:'Café Frappe',desc:'Coffee shot blended with ice, milk & whipped cream',price:189,img:'https://images.unsplash.com/photo-1572490122747-3968b75cc699?w=400&q=85'},
+    {id:'fr2',name:'Mocha Frappe',desc:'Mocha blended with ice, milk & whipped cream',price:199,img:'https://images.unsplash.com/photo-1544145945-f90425340c7e?w=400&q=85'},
+    {id:'fr3',name:'Hazelnut Frappe',desc:'Hazelnut blended with ice, milk & whipped cream',price:199,img:'https://images.unsplash.com/photo-1541167760496-1628856ab772?w=400&q=85'},
+    {id:'fr4',name:'Caramel Frappe',desc:'Caramel blended with ice, milk & whipped cream',price:199,img:'https://images.unsplash.com/photo-1570968915860-54d5c301fa9f?w=400&q=85'},
+    {id:'fr5',name:'Vanilla Frappe',desc:'Vanilla blended with ice, milk & whipped cream',price:199,img:'https://images.unsplash.com/photo-1553361371-9b22f78e8b1d?w=400&q=85'},
+    {id:'fr6',name:'Mango Frappe',desc:'Mango blended with ice, milk & whipped cream',price:199,img:'https://images.unsplash.com/photo-1546173159-315724a31696?w=400&q=85'},
+    {id:'fr7',name:'Irish Brownie Frappe',desc:'Irish brownie frappe blend with whipped cream',price:219,img:'https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=400&q=85'},
+  ]},
+  {id:'coldbrew',label:'Cold Brew',icon:'🧊',items:[
+    {id:'cb1',name:'Cranberry Cold Brew',desc:'Coffee brewed overnight, laced with cranberry flavour',price:159,img:'https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=400&q=85'},
+    {id:'cb2',name:'Green Apple Cold Brew',desc:'Coffee brewed overnight with green apple flavour',price:159,img:'https://images.unsplash.com/photo-1499638673689-79a0b5115d87?w=400&q=85'},
+    {id:'cb3',name:'Peach Cold Brew',desc:'Coffee brewed overnight with peach flavour',price:159,img:'https://images.unsplash.com/photo-1621263764928-df1444c5e859?w=400&q=85'},
+    {id:'cb4',name:'Coconut Cold Brew',desc:'Coffee brewed overnight with coconut flavour',price:159,img:'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=400&q=85'},
+    {id:'cb5',name:'Cinnamon Cold Brew',desc:'Coffee brewed overnight with cinnamon flavour',price:159,img:'https://images.unsplash.com/photo-1534778101976-62847782c213?w=400&q=85'},
+  ]},
+  {id:'cooler',label:'Coolers & Iced Tea',icon:'🥤',items:[
+    {id:'cl1',name:'Blue Lagoon Cooler',desc:'Ice blend refreshing drink with flavors',price:169,img:'https://images.unsplash.com/photo-1587015990127-424b954571f4?w=400&q=85'},
+    {id:'cl2',name:'Watermelon Cooler',desc:'Ice blend refreshing watermelon drink',price:169,img:'https://images.unsplash.com/photo-1600271886742-f049cd451bba?w=400&q=85'},
+    {id:'cl3',name:'Peach Cooler',desc:'Ice blend refreshing peach drink',price:169,img:'https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=400&q=85'},
+    {id:'cl4',name:'Kala Khatta Cooler',desc:'Ice blend refreshing kala khatta drink',price:169,img:'https://images.unsplash.com/photo-1546171753-97d7676e4602?w=400&q=85'},
+    {id:'cl5',name:'Lemon Iced Tea',desc:'Blend of tea liquor, lemon juice & ice',price:149,img:'https://images.unsplash.com/photo-1499638673689-79a0b5115d87?w=400&q=85'},
+    {id:'cl6',name:'Peach Iced Tea',desc:'Perfect blend of tea with peach & ice',price:149,img:'https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=400&q=85'},
+    {id:'cl7',name:'Watermelon Iced Tea',desc:'Perfect blend of tea with watermelon & ice',price:149,img:'https://images.unsplash.com/photo-1600271886742-f049cd451bba?w=400&q=85'},
+    {id:'cl8',name:'Orange Iced Tea',desc:'Perfect blend of tea with orange & ice',price:149,img:'https://images.unsplash.com/photo-1465014925804-7b9ede58d0d7?w=400&q=85'},
+  ]},
+  {id:'shakes',label:'Shakes & Mojitos',icon:'🍓',items:[
+    {id:'sh1',name:'Classic Chocolate Shake',desc:'Ice, milk & cream blended with chocolate, topped with whipped cream',price:189,img:'https://images.unsplash.com/photo-1572490122747-3968b75cc699?w=400&q=85'},
+    {id:'sh2',name:'Strawberry Shake',desc:'Thick strawberry shake with whipped cream',price:189,img:'https://images.unsplash.com/photo-1553361371-9b22f78e8b1d?w=400&q=85'},
+    {id:'sh3',name:'Mango Shake',desc:'Thick mango shake with whipped cream',price:189,img:'https://images.unsplash.com/photo-1527661591475-527312dd65f5?w=400&q=85'},
+    {id:'sh4',name:'Oreo Shake',desc:'Thick Oreo blended shake with whipped cream',price:189,img:'https://images.unsplash.com/photo-1541167760496-1628856ab772?w=400&q=85'},
+    {id:'sh5',name:'Brownie Shake',desc:'Thick brownie blended shake with whipped cream',price:229,img:'https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=400&q=85'},
+    {id:'sh6',name:'Classic Virgin Mojito',desc:'Smashed mint, muddled limes & crushed ice',price:169,img:'https://images.unsplash.com/photo-1551538827-9c037cb4f32a?w=400&q=85'},
+    {id:'sh7',name:'Peach Mojito',desc:'Minty mocktail with fresh peach flavour',price:169,img:'https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=400&q=85'},
+    {id:'sh8',name:'Blueberry Mojito',desc:'Minty mocktail with fresh blueberry flavour',price:169,img:'https://images.unsplash.com/photo-1546171753-97d7676e4602?w=400&q=85'},
+    {id:'sh9',name:'Watermelon Mojito',desc:'Minty mocktail with fresh watermelon flavour',price:169,img:'https://images.unsplash.com/photo-1600271886742-f049cd451bba?w=400&q=85'},
+    {id:'sh10',name:'Coffito',desc:'Coffee meets mojito — unique cold blend',price:169,img:'https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=400&q=85'},
+  ]},
+  {id:'breakfast',label:'All Day Breakfast',icon:'🍳',items:[
+    {id:'b1',name:'French Toast',desc:'Pan-fried brown bread soaked in eggs, sugar & milk, with maple syrup',price:139,img:'https://images.unsplash.com/photo-1484723091739-30a097e8f929?w=400&q=85'},
+    {id:'b2',name:'Scrambled Eggs',desc:'3 eggs scrambled to perfect texture, served with bread toast & butter',price:139,img:'https://images.unsplash.com/photo-1608039829572-78524f79c4c7?w=400&q=85'},
+    {id:'b3',name:'Masala Omelette',desc:'3 eggs omelette with Indian spices, served with bread toast & butter',price:139,img:'https://images.unsplash.com/photo-1567620832903-9fc6debc209f?w=400&q=85'},
+    {id:'b4',name:'Cheese Omelette',desc:'3 eggs omelette with cheese, bread toast & butter',price:159,img:'https://images.unsplash.com/photo-1510693206972-df098062cb71?w=400&q=85'},
+    {id:'b5',name:'Chicken Omelette',desc:'3 eggs omelette with chicken, bread toast & butter',price:169,img:'https://images.unsplash.com/photo-1525351484163-7529414344d8?w=400&q=85'},
+    {id:'b6',name:'Tortilla Espanola',desc:'Spanish omelette with eggs, potato & onion in olive oil',price:189,img:'https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=400&q=85'},
+    {id:'b7',name:'American Breakfast',desc:'2 eggs, toast, 2 hash browns, 2 chicken sausages',price:209,img:'https://images.unsplash.com/photo-1533920379810-6bedac961555?w=400&q=85'},
+    {id:'b8',name:'English Breakfast',desc:'2 eggs, toast, hash browns, sausage, baked beans & sauté vegetables',price:249,img:'https://images.unsplash.com/photo-1504754524776-8f4f37790ca0?w=400&q=85'},
+    {id:'b9',name:'Pancakes',desc:'Soft fluffy pancakes with maple syrup and banana',price:169,img:'https://images.unsplash.com/photo-1528207776546-365bb710ee93?w=400&q=85'},
+    {id:'b10',name:'Chocolate Pancakes',desc:'Fluffy chocolate pancakes topped with chocolate sauce',price:189,img:'https://images.unsplash.com/photo-1565299543923-37dd37887442?w=400&q=85'},
+    {id:'b11',name:'Nutella Pancakes',desc:'Fluffy chocolate pancakes topped with Nutella sauce',price:249,img:'https://images.unsplash.com/photo-1506084868230-bb9d95c24759?w=400&q=85'},
+  ]},
+  {id:'breads',label:'Breads & Burgers',icon:'🥪',items:[
+    {id:'br1',name:'Chicken Sandwich',desc:'Shredded chicken with mayo, grilled in brown bread, served with chips',price:149,img:'https://images.unsplash.com/photo-1528735602780-2552fd46c7af?w=400&q=85'},
+    {id:'br2',name:'Chicken Cheese Sandwich',desc:'Shredded chicken & cheese with mayo, grilled in brown bread',price:159,img:'https://images.unsplash.com/photo-1481070555726-e2fe8357725c?w=400&q=85'},
+    {id:'br3',name:'Club Sandwich',desc:'Veg, egg and chicken sandwiches clubbed and grilled, with chips',price:239,img:'https://images.unsplash.com/photo-1553909489-cd47e0907980?w=400&q=85'},
+    {id:'br4',name:'Garlic Bread',desc:'4 slices of bread with loads of garlic, seasoning & butter',price:129,img:'https://images.unsplash.com/photo-1598679253544-2c97992403ea?w=400&q=85'},
+    {id:'br5',name:'Cheese Garlic Bread',desc:'4 slices of garlic bread loaded with cheese & cherry tomato',price:149,img:'https://images.unsplash.com/photo-1571407970349-bc81e7e96d47?w=400&q=85'},
+    {id:'br6',name:'Chilli Cheese Toast',desc:'Bread toast loaded with pepper, chilli & cheese',price:169,img:'https://images.unsplash.com/photo-1525351484163-7529414344d8?w=400&q=85'},
+    {id:'br7',name:'Aloo Tikki Burger',desc:'Our own aloo tikki with tomato, cucumber, cheese & soft buns',price:159,img:'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400&q=85'},
+    {id:'br8',name:'Chicken Cheese Burger',desc:'Juicy grilled chicken with omelette, tomato, cucumber, cheese & buns',price:219,img:'https://images.unsplash.com/photo-1553979459-d2229ba7433b?w=400&q=85'},
+  ]},
+  {id:'pizza',label:'Pizza',icon:'🍕',items:[
+    {id:'p1',name:'Margarita',desc:'Thin crust 8" pizza in traditional tomato sauce with basil & mozzarella',price:199,img:'https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=400&q=85'},
+    {id:'p2',name:'Veg Exotica',desc:'Thin crust with exotic veggies and stringy mozzarella',price:229,img:'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=400&q=85'},
+    {id:'p3',name:'Peri Peri Paneer',desc:'Thin crust with peri peri paneer and stringy mozzarella',price:229,img:'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=400&q=85'},
+    {id:'p4',name:'Chicken Margarita',desc:'Margarita pizza loaded with chicken',price:239,img:'https://images.unsplash.com/photo-1628840042765-356cda07504e?w=400&q=85'},
+    {id:'p5',name:'Chicken Exotica',desc:'Thin crust with chicken, sausages & stringy mozzarella',price:259,img:'https://images.unsplash.com/photo-1590947132387-155cc02f3212?w=400&q=85'},
+    {id:'p6',name:'Peri Peri Chicken',desc:'Thin crust with peri peri chicken and stringy mozzarella',price:259,img:'https://images.unsplash.com/photo-1565299585323-38d6b0865b47?w=400&q=85'},
+  ]},
+  {id:'momos',label:'Momos & Pasta',icon:'🥟',items:[
+    {id:'m1',name:'Corn Cheese Momo',desc:'Steamed momos stuffed with corn and cheese',price:129,img:'https://images.unsplash.com/photo-1563245372-f21724e3856d?w=400&q=85'},
+    {id:'m2',name:'Chicken Momo',desc:'Steamed momos stuffed with juicy chicken',price:139,img:'https://images.unsplash.com/photo-1563245372-f21724e3856d?w=400&q=85'},
+    {id:'m3',name:'Chicken Cheese Momo',desc:'Steamed momos stuffed with chicken & cheese',price:149,img:'https://images.unsplash.com/photo-1563245372-f21724e3856d?w=400&q=85'},
+    {id:'m4',name:'Alfredo Veg',desc:'White creamy sauce pasta with exotic vegetables',price:199,img:'https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?w=400&q=85'},
+    {id:'m5',name:'Alfredo Chicken',desc:'White creamy sauce pasta with exotic vegetables & chicken',price:239,img:'https://images.unsplash.com/photo-1645112411341-6c4fd023714a?w=400&q=85'},
+    {id:'m6',name:'Arrabiata Veg',desc:'Red tangy sauce pasta with veggies',price:199,img:'https://images.unsplash.com/photo-1569050467447-ce54b3bbc37d?w=400&q=85'},
+    {id:'m7',name:'Arrabiata Chicken',desc:'Red tangy sauce pasta with veggies & chicken',price:239,img:'https://images.unsplash.com/photo-1608219992759-8d74ed8d76eb?w=400&q=85'},
+    {id:'m8',name:'Aglio Olio Veg',desc:'Pasta in garlic, olive oil & seasoning, topped with grated cheese',price:199,img:'https://images.unsplash.com/photo-1473093295043-cdd812d0e601?w=400&q=85'},
+    {id:'m9',name:'Aglio Olio Chicken',desc:'Pasta in garlic, olive oil, seasoning, cheese & chicken',price:239,img:'https://images.unsplash.com/photo-1555949258-eb67b1ef0ceb?w=400&q=85'},
+    {id:'m10',name:'Mac & Cheese',desc:'Macaroni pasta in extra cheesy sauce',price:209,img:'https://images.unsplash.com/photo-1543339308-43e59d6b73a6?w=400&q=85'},
+  ]},
+  {id:'bites',label:'Small Bites',icon:'🍟',items:[
+    {id:'sb1',name:'French Fries',desc:'Potato sticks golden fried, served with ketchup and mayo',price:109,img:'https://images.unsplash.com/photo-1630384060421-cb20d0e0649d?w=400&q=85'},
+    {id:'sb2',name:'Peri Peri French Fries',desc:'Golden fries layered with peri peri sprinkler, ketchup & mayo',price:129,img:'https://images.unsplash.com/photo-1573080496219-bb080dd4f877?w=400&q=85'},
+    {id:'sb3',name:'Honey Chilli Potato',desc:'Potato fries sautéed in sweet and spicy sauce',price:179,img:'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400&q=85'},
+    {id:'sb4',name:'Cheese Cigar',desc:'Thin fried rolls stuffed with cheese, served with sweet chilli sauce',price:199,img:'https://images.unsplash.com/photo-1617196034183-421b4040ed20?w=400&q=85'},
+    {id:'sb5',name:'Chilli Paneer Dry',desc:'Paneer strips sautéed in green chillies, onion and garlic',price:199,img:'https://images.unsplash.com/photo-1606491956689-2ea866880c84?w=400&q=85'},
+    {id:'sb6',name:'Chicken Popcorn',desc:'Small chicken pieces marinated in hot spices & crispy fried',price:229,img:'https://images.unsplash.com/photo-1562967916-eb82221dfb92?w=400&q=85'},
+    {id:'sb7',name:'BBQ Chicken Wings',desc:'Chicken wings marinated in classic barbecue sauce, cooked to perfection',price:219,img:'https://images.unsplash.com/photo-1527477396000-e27163b481c2?w=400&q=85'},
+    {id:'sb8',name:'Chicken Fried Strips',desc:'Chicken strips in red Thai paste, tempura powder, crispy fried',price:229,img:'https://images.unsplash.com/photo-1598514983318-2f64f8f4796c?w=400&q=85'},
+    {id:'sb9',name:'Chilli Chicken Dry',desc:'Tangra style boneless chicken sautéed in green chillies, onion & garlic',price:219,img:'https://images.unsplash.com/photo-1610057099443-fde8c4d50f91?w=400&q=85'},
+    {id:'sb10',name:'Fish & Chips',desc:'Breadcrumb-wrapped fish cutlet, fried with french fries, kasaundi & mayo',price:259,img:'https://images.unsplash.com/photo-1579584425555-c3ce17fd4351?w=400&q=85'},
+    {id:'sb11',name:'Pepper Garlic Prawns',desc:'Prawns sautéed in lemon garlic butter, garnished with spring onions & pepper',price:279,img:'https://images.unsplash.com/photo-1565557623262-b51c2513a641?w=400&q=85'},
+    {id:'sb12',name:'Prawn Tempura',desc:'Prawns wrapped in tempura & deep fried, served with spicy soy sauce',price:279,img:'https://images.unsplash.com/photo-1519984388953-d2406bc725e1?w=400&q=85'},
+  ]},
+  {id:'mains',label:'Full Plates',icon:'🍽️',items:[
+    {id:'fp1',name:'Adana Kebab',desc:'Turkish chicken kebab grilled to perfection, with dip, onion salad & tortilla',price:299,img:'https://images.unsplash.com/photo-1544025162-d76694265947?w=400&q=85'},
+    {id:'fp2',name:'Khaosuey',desc:'Authentic Burmese yellow curry broth with noodles and ten condiments',price:349,img:'https://images.unsplash.com/photo-1569050467447-ce54b3bbc37d?w=400&q=85'},
+    {id:'fp3',name:'Thai Curry (Veg)',desc:'Authentic Thai curry with red or green paste, veggies & steamed rice',price:229,img:'https://images.unsplash.com/photo-1455619452474-d2be8b1e70cd?w=400&q=85'},
+    {id:'fp4',name:'Thai Curry (Chicken)',desc:'Authentic Thai curry with red or green paste, chicken & steamed rice',price:249,img:'https://images.unsplash.com/photo-1455619452474-d2be8b1e70cd?w=400&q=85'},
+    {id:'fp5',name:'Pad Thai Veg',desc:'Thai stir fried flat saucy noodles with veggies',price:229,img:'https://images.unsplash.com/photo-1559314809-0d155014e29e?w=400&q=85'},
+    {id:'fp6',name:'Pad Thai Chicken',desc:'Thai stir fried flat saucy noodles with veggies, eggs & chicken',price:249,img:'https://images.unsplash.com/photo-1503764654157-72d979d9af2f?w=400&q=85'},
+    {id:'fp7',name:'Hakka Noodles Veg',desc:'Tangra style Hakka chowmein',price:199,img:'https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=400&q=85'},
+    {id:'fp8',name:'Hakka Noodles Chicken',desc:'Tangra style Hakka chowmein with chicken',price:229,img:'https://images.unsplash.com/photo-1582878826629-29b7ad1cdc43?w=400&q=85'},
+    {id:'fp9',name:'Fried Rice Veg',desc:'Stir fried garlic tossed with rice and veggies',price:199,img:'https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=400&q=85'},
+    {id:'fp10',name:'Fried Rice Chicken',desc:'Stir fried garlic tossed with rice, veggies & chicken',price:229,img:'https://images.unsplash.com/photo-1512058564366-18510be2db19?w=400&q=85'},
+    {id:'fp11',name:'Caesar Salad Chicken',desc:'Creamy green salad with lettuce, cabbage, croutons, egg & shredded chicken',price:199,img:'https://images.unsplash.com/photo-1550304943-4f24f54ddde9?w=400&q=85'},
+    {id:'fp12',name:'Greek Salad',desc:'Feta cheese, cherry tomatoes, olives, bell pepper & herbs with mustard vinaigrette',price:199,img:'https://images.unsplash.com/photo-1540420773420-3366772f4999?w=400&q=85'},
+    {id:'fp13',name:'Grilled Chicken in Lemon Butter',desc:'House special grilled chicken in lemon butter sauce with sauté vegetables & herb rice',price:299,img:'https://images.unsplash.com/photo-1432139555190-58524dae6a55?w=400&q=85'},
+    {id:'fp14',name:'Monterey Chicken',desc:'Mexican grilled chicken breast with veggies, mashed potato & herb rice',price:299,img:'https://images.unsplash.com/photo-1598103442097-8b74394b95c3?w=400&q=85'},
+    {id:'fp15',name:'Grilled Fish in Lemon Butter',desc:'French grilled fish in lemon butter, served with greens & herb rice',price:349,img:'https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=400&q=85'},
+  ]},
+  {id:'desserts',label:'Desserts',icon:'🍰',items:[
+    {id:'ds1',name:'Brownie',desc:'Classic homemade chocolate brownie',price:99,img:'https://images.unsplash.com/photo-1564355808539-22fda35bed7e?w=400&q=85'},
+    {id:'ds2',name:'Brownie with Ice Cream',desc:'Warm chocolate brownie served with a scoop of vanilla ice cream',price:139,img:'https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=400&q=85'},
+  ]},
+];
+
+let cart={},selTable=null,guestName='';
+
+// TABLE
+const tGrid=document.getElementById('tGrid');
+const enterBtn=document.getElementById('enterBtn');
+const nameInput=document.getElementById('nameInput');
+
+for(let i=1;i<=20;i++){
+  const b=document.createElement('button');
+  b.className='t-btn';b.textContent=i;
+  b.onclick=()=>{
+    document.querySelectorAll('.t-btn').forEach(x=>x.classList.remove('sel'));
+    b.classList.add('sel');selTable=i;checkReady();
+  };
+  tGrid.appendChild(b);
+}
+
+function checkReady(){
+  const hasName=nameInput.value.trim().length>1;
+  const hasTable=selTable!==null;
+  enterBtn.classList.toggle('on',hasName&&hasTable);
+}
+nameInput.addEventListener('input',checkReady);
+
+enterBtn.onclick=()=>{
+  guestName=nameInput.value.trim()||'Guest';
+  document.getElementById('onboard').style.display='none';
+  document.getElementById('app').style.display='block';
+  document.getElementById('guestChip').textContent=guestName;
+  document.getElementById('tableChip').textContent='Table '+selTable;
+  document.getElementById('heroName').textContent='Hello, '+guestName+' 👋';
+  buildMenu();
+};
+
+// MENU
+function buildMenu(){
+  const nav=document.getElementById('catNav');
+  const body=document.getElementById('menuBody');
+  MENU.forEach((cat,idx)=>{
+    const pill=document.createElement('button');
+    pill.className='cpill'+(idx===0?' on':'');
+    pill.innerHTML=cat.icon+' '+cat.label;
+    pill.onclick=()=>{
+      document.querySelectorAll('.cpill').forEach(p=>p.classList.remove('on'));
+      pill.classList.add('on');
+      document.getElementById('sec-'+cat.id).scrollIntoView({behavior:'smooth',block:'start'});
+    };
+    nav.appendChild(pill);
+
+    const sec=document.createElement('section');
+    sec.className='m-section';sec.id='sec-'+cat.id;
+    sec.innerHTML=`
+      <div class="sec-hdr">
+        <div class="sec-icon">${cat.icon}</div>
+        <div class="sec-name">${cat.label}</div>
+        <div class="sec-line"></div>
+      </div>
+      <div class="items-grid" id="grid-${cat.id}"></div>
+    `;
+    body.appendChild(sec);
+    cat.items.forEach(it=>appendCard(it,cat.id));
+  });
+}
+
+function cardHTML(it){
+  const q=cart[it.id]?cart[it.id].qty:0;
+  return`
+    <div class="card-img-wrap">
+      <img class="card-img" src="${it.img}" alt="${it.name}" loading="lazy" onerror="this.style.display='none'">
+      <div class="img-overlay"></div>
+      <div class="img-badge">₹${it.price}</div>
+    </div>
+    <div class="card-body">
+      <div class="card-name">${it.name}</div>
+      <div class="card-desc">${it.desc}</div>
+      <div class="card-foot">
+        <div class="card-price">₹${it.price}</div>
+        <div>${q===0
+          ?`<button class="add-btn" onclick="addItem('${it.id}')">+</button>`
+          :`<div class="qty-row">
+              <button class="qb" onclick="decItem('${it.id}')">−</button>
+              <span class="qn">${q}</span>
+              <button class="qb" onclick="addItem('${it.id}')">+</button>
+            </div>`
+        }</div>
+      </div>
+    </div>
+  `;
+}
+
+function appendCard(it,catId){
+  const grid=document.getElementById('grid-'+catId);
+  const div=document.createElement('div');
+  div.className='m-card';div.id='mc-'+it.id;
+  div.innerHTML=cardHTML(it);
+  // 3D tilt
+  div.addEventListener('mousemove',e=>{
+    const r=div.getBoundingClientRect();
+    const x=(e.clientX-r.left)/r.width-.5;
+    const y=(e.clientY-r.top)/r.height-.5;
+    div.style.transform=`perspective(700px) rotateY(${x*9}deg) rotateX(${-y*7}deg) translateY(-4px) scale(1.015)`;
+  });
+  div.addEventListener('mouseleave',()=>{div.style.transform='';});
+  grid.appendChild(div);
+}
+
+function refreshCard(id){
+  const it=findItem(id);
+  const el=document.getElementById('mc-'+id);
+  if(it&&el)el.innerHTML=cardHTML(it);
+}
+function findItem(id){
+  for(const c of MENU){const i=c.items.find(x=>x.id===id);if(i)return i;}return null;
+}
+
+function addItem(id){
+  const it=findItem(id);if(!it)return;
+  if(!cart[id])cart[id]={...it,qty:0};
+  cart[id].qty++;
+  refreshCard(id);
+  const img=document.querySelector('#mc-'+id+' .card-img-wrap');
+  if(img){img.classList.remove('tilt-pop');void img.offsetWidth;img.classList.add('tilt-pop');}
+  updateUI();
+}
+function decItem(id){
+  if(!cart[id])return;
+  cart[id].qty--;
+  if(cart[id].qty<=0)delete cart[id];
+  refreshCard(id);updateUI();
+}
+
+function total(){return Object.values(cart).reduce((s,i)=>s+i.price*i.qty,0);}
+function count(){return Object.values(cart).reduce((s,i)=>s+i.qty,0);}
+
+function updateUI(){
+  const n=count(),t=total();
+  const cd=document.getElementById('cdot');
+  cd.textContent=n;cd.classList.toggle('on',n>0);
+  const fb=document.getElementById('floatBar');
+  fb.classList.toggle('on',n>0);
+  document.getElementById('fbBadge').textContent=n;
+  document.getElementById('fbPrice').textContent='₹'+t;
+  renderCart();
+}
+
+function renderCart(){
+  const body=document.getElementById('cartBody');
+  const items=Object.values(cart);
+  if(!items.length){
+    body.innerHTML=`<div class="cs-empty"><div class="ei">🛒</div><p>Your cart is empty.<br>Add something delicious!</p></div>`;
+    return;
+  }
+  const sub=total(),tax=Math.round(sub*.05),grand=sub+tax;
+  body.innerHTML=`
+    <div class="cs-list">
+      ${items.map(i=>`
+        <div class="cs-item">
+          <img class="cs-img" src="${i.img}" alt="${i.name}" onerror="this.style.display='none'">
+          <div class="cs-inf">
+            <div class="cs-n">${i.name}</div>
+            <div class="cs-p">₹${i.price} × ${i.qty} = ₹${i.price*i.qty}</div>
+          </div>
+          <div class="cs-ctl">
+            <button class="csb" onclick="decItem('${i.id}');renderCart()">−</button>
+            <span class="csq">${i.qty}</span>
+            <button class="csb" onclick="addItem('${i.id}');renderCart()">+</button>
+          </div>
+        </div>
+      `).join('')}
+    </div>
+    <div class="cs-rule"></div>
+    <div class="cs-sum">
+      <div class="sum-row"><span>Subtotal</span><span>₹${sub}</span></div>
+      <div class="sum-row"><span>GST (5%)</span><span>₹${tax}</span></div>
+      <div class="sum-row tot"><span>Grand Total</span><span>₹${grand}</span></div>
+    </div>
+    <div class="tbl-strip">👤 ${guestName} &nbsp;·&nbsp; 📍 Table ${selTable}</div>
+    <button class="wa-btn" onclick="placeOrder(${grand})">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M11.999 0C5.373 0 0 5.373 0 12c0 2.117.554 4.103 1.523 5.828L.057 23.882a.5.5 0 00.61.61l6.054-1.466A11.945 11.945 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.9a9.872 9.872 0 01-5.031-1.376l-.36-.214-3.733.904.92-3.637-.234-.374A9.867 9.867 0 012.1 12C2.1 6.534 6.534 2.1 12 2.1S21.9 6.534 21.9 12 17.466 21.9 12 21.9z"/></svg>
+      Send Order via WhatsApp
+    </button>
+  `;
+}
+
+function openCart(){
+  document.getElementById('cOverlay').classList.add('on');
+  document.getElementById('cartSheet').classList.add('on');
+  renderCart();
+}
+function closeCart(){
+  document.getElementById('cOverlay').classList.remove('on');
+  document.getElementById('cartSheet').classList.remove('on');
+}
+
+function placeOrder(grand){
+  const items=Object.values(cart);
+  if(!items.length)return;
+  const lines=items.map(i=>`  • ${i.name} x${i.qty} — ₹${i.price*i.qty}`).join('\n');
+  const tax=Math.round(total()*.05);
+  const msg=`🍽️ *New Order — The Little Bistro*\n\n👤 *Guest Name:* ${guestName}\n📍 *Table Number:* ${selTable}\n\n*Order Details:*\n${lines}\n\n───────────────\nSubtotal: ₹${total()}\nGST (5%): ₹${tax}\n*Grand Total: ₹${grand}*\n───────────────\n\n_Sent via The Little Bistro Digital Menu_`;
+  window.open('https://wa.me/919831313237?text='+encodeURIComponent(msg),'_blank');
+}
+</script>
+</body>
+</html>
